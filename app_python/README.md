@@ -25,6 +25,53 @@ PORT=8080 python app.py          # Custom port
 HOST=127.0.0.1 PORT=3000 python app.py
 ```
 
+## Docker
+
+### Building the Image
+
+```bash
+docker build -t devops-app:1.0.0 .
+```
+
+### Running a Container
+
+```bash
+docker run -d -p 5000:5000 devops-app:1.0.0
+```
+
+Access the service at `http://localhost:5000`
+
+### Pulling from Docker Hub
+
+```bash
+docker pull netotveto/devops-app:1.0.0
+docker run -d -p 5000:5000 netotveto/devops-app:1.0.0
+```
+
+**Docker Hub Repository:** https://hub.docker.com/r/netotveto/devops-app
+
+### Configuration in Docker
+
+Environment variables can be passed at runtime:
+
+```bash
+docker run -d -p 5000:5000 \
+  -e HOST=0.0.0.0 \
+  -e PORT=5000 \
+  -e DEBUG=False \
+  devops-app:1.0.0
+```
+
+### Dockerfile Features
+
+- **Non-root user**: Runs as `appuser` (uid 1000) for security
+- **Multi-stage build**: Optimized image size with separate builder stage
+- **Health check**: Included for Kubernetes and orchestration readiness
+- **Specific base image**: Python 3.13-slim for smaller footprint
+- **.dockerignore**: Excludes unnecessary files for faster builds
+
+For detailed implementation documentation, see [LAB02.md](docs/LAB02.md)
+
 ## API Endpoints
 
 | Endpoint | Method | Description |
