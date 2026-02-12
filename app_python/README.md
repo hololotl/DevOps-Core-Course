@@ -1,5 +1,8 @@
 # DevOps Info Service (Flask)
 
+[![Python CI](https://github.com/<OWNER>/<REPO>/actions/workflows/python-ci.yml/badge.svg)](https://github.com/<OWNER>/<REPO>/actions/workflows/python-ci.yml)
+
+
 ## Overview
 
 A lightweight Flask web service providing detailed information about itself and its runtime environment. Exposes system metrics, runtime statistics, and request metadata via JSON endpoints. Foundation for DevOps monitoring and containerization labs.
