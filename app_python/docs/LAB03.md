@@ -1,5 +1,9 @@
 # LAB03 — Unit Tests (Task 1)
 
+## Link to Ci
+
+https://github.com/hololotl/DevOps-Core-Course/actions/runs/21955176111
+
 ## Versioning Strategy
 
 We use Calendar Versioning (CalVer).
