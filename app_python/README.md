@@ -1,6 +1,6 @@
 # DevOps Info Service (Flask)
 
-[![Python CI](https://github.com/<OWNER>/<REPO>/actions/workflows/python-ci.yml/badge.svg)](https://github.com/<OWNER>/<REPO>/actions/workflows/python-ci.yml)
+[![Python CI & Docker Build](https://github.com/hololotl/DevOps-Core-Course/actions/workflows/python-ci.yml/badge.svg)](https://github.com/hololotl/DevOps-Core-Course/actions/workflows/python-ci.yml)
 
 
 ## Overview
