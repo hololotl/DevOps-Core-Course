@@ -1,3 +1,7 @@
 *.pyc
 venv/
 .secrets
+# Pulumi secrets
+.Pulumi/
+Pulumi.*.yaml
+pulumi_*.log
