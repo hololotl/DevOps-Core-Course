@@ -21,3 +21,8 @@ key.json
 # OS
 .DS_Store
 Thumbs.db
+
+# Pulumi secrets
+.Pulumi/
+Pulumi.*.yaml
+pulumi_*.log
