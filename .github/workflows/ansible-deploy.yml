@@ -82,11 +82,11 @@ jobs:
       - name: Verify Deployment
         run: |
           sleep 10
-          curl -f http://${{ secrets.VM_HOST }}:8000/health || exit 1
+          curl -f http://${{ secrets.VM_HOST }}:5000/health || exit 1
           echo "Application health check passed!"
 
       - name: Log deployment status
         if: success()
         run: |
           echo "✅ Deployment completed successfully"
-          echo "Application URL: http://${{ secrets.VM_HOST }}:8000"
+          echo "Application URL: http://${{ secrets.VM_HOST }}:5000"
