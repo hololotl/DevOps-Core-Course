@@ -5,28 +5,27 @@
 #        ansible-playbook deploy.yml -e "web_app_wipe=true" --tags web_app_wipe
 
 - name: Wipe web application
+  tags:
+    - web_app_wipe
   block:
     - name: Stop and remove containers with Docker Compose
       community.docker.docker_compose_v2:
-        project_src: "{{ compose_project_dir }}"
+        project_src: "{{ web_app_compose_project_dir }}"
         state: absent
-      ignore_errors: true
+      failed_when: false
 
     - name: Remove docker-compose.yml file
       ansible.builtin.file:
-        path: "{{ compose_project_dir }}/docker-compose.yml"
+        path: "{{ web_app_compose_project_dir }}/docker-compose.yml"
         state: absent
-      ignore_errors: true
+      failed_when: false
 
     - name: Remove application directory
       ansible.builtin.file:
-        path: "{{ compose_project_dir }}"
+        path: "{{ web_app_compose_project_dir }}"
         state: absent
-      ignore_errors: true
+      failed_when: false
 
     - name: Log wipe completion
       ansible.builtin.debug:
-        msg: "Application {{ app_name }} wiped successfully from {{ compose_project_dir }}"
-
-  tags:
-    - web_app_wipe
+        msg: "Application {{ web_app_name }} wiped successfully from {{ web_app_compose_project_dir }}"

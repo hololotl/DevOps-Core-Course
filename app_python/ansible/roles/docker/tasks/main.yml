@@ -1,18 +1,21 @@
 ---
 - name: Docker installation
+  become: true
+  tags:
+    - docker_install
   block:
     - name: Add Docker GPG key
-      apt_key:
+      ansible.builtin.apt_key:
         url: https://download.docker.com/linux/ubuntu/gpg
         state: present
 
     - name: Add Docker repository
-      apt_repository:
+      ansible.builtin.apt_repository:
         repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
         state: present
 
     - name: Install Docker packages
-      apt:
+      ansible.builtin.apt:
         name:
           - docker-ce
           - docker-ce-cli
@@ -20,29 +23,29 @@
           - docker-buildx-plugin
           - docker-compose-plugin
         state: present
-        update_cache: yes
+        update_cache: true
 
   rescue:
     - name: Wait before retry after Docker key/repository failure
-      wait_for:
+      ansible.builtin.wait_for:
         timeout: 10
 
     - name: Refresh apt cache before retry
-      apt:
-        update_cache: yes
+      ansible.builtin.apt:
+        update_cache: true
 
     - name: Retry adding Docker GPG key
-      apt_key:
+      ansible.builtin.apt_key:
         url: https://download.docker.com/linux/ubuntu/gpg
         state: present
 
     - name: Retry adding Docker repository
-      apt_repository:
+      ansible.builtin.apt_repository:
         repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
         state: present
 
     - name: Retry Docker packages installation
-      apt:
+      ansible.builtin.apt:
         name:
           - docker-ce
           - docker-ce-cli
@@ -50,32 +53,27 @@
           - docker-buildx-plugin
           - docker-compose-plugin
         state: present
-        update_cache: yes
+        update_cache: true
 
   always:
     - name: Ensure Docker service is enabled and started
-      systemd:
+      ansible.builtin.systemd:
         name: docker
         state: started
-        enabled: yes
-
-  become: true
-  tags:
-    - docker_install
+        enabled: true
 
 - name: Docker configuration
-  block:
-    - name: Add user to docker group
-      user:
-        name: "{{ docker_user }}"
-        groups: docker
-        append: yes
-
-    - name: Install python3-docker via apt
-      apt:
-        name: python3-docker
-        state: present
-
   become: true
   tags:
     - docker_config
+  block:
+    - name: Add user to docker group
+      ansible.builtin.user:
+        name: "{{ docker_user }}"
+        groups: docker
+        append: true
+
+    - name: Install python3-docker via apt
+      ansible.builtin.apt:
+        name: python3-docker
+        state: present
