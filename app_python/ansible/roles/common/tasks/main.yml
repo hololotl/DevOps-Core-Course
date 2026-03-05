@@ -1,59 +1,59 @@
 ---
 - name: Common packages management (with error handling)
+  become: true
+  tags:
+    - packages
   block:
     - name: Update apt cache
-      apt:
-        update_cache: yes
+      ansible.builtin.apt:
+        update_cache: true
         cache_valid_time: 3600
 
     - name: Install common packages
-      apt:
+      ansible.builtin.apt:
         name: "{{ common_packages }}"
         state: present
 
   rescue:
     - name: Recover apt cache update with --fix-missing
-      command: apt-get update --fix-missing
+      ansible.builtin.apt:
+        update_cache: true
+        force_apt_get: true
       changed_when: false
 
     - name: Retry installing common packages after apt recovery
-      apt:
+      ansible.builtin.apt:
         name: "{{ common_packages }}"
         state: present
-        update_cache: yes
+        update_cache: true
 
   always:
     - name: Log common packages block completion
-      copy:
+      ansible.builtin.copy:
         dest: /tmp/common_packages_block.log
         content: "common packages block completed\n"
         mode: "0644"
 
+- name: Common users management
   become: true
   tags:
-    - packages
-
-- name: Common users management
+    - users
   block:
     - name: Ensure primary common user exists
-      user:
+      ansible.builtin.user:
         name: "{{ common_user }}"
         state: present
         shell: /bin/bash
 
     - name: Ensure primary common user is in sudo group
-      user:
+      ansible.builtin.user:
         name: "{{ common_user }}"
         groups: sudo
-        append: yes
+        append: true
 
   always:
     - name: Log common users block completion
-      copy:
+      ansible.builtin.copy:
         dest: /tmp/common_users_block.log
         content: "common users block completed\n"
         mode: "0644"
-
-  become: true
-  tags:
-    - users
