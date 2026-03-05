@@ -7,3 +7,5 @@ common_packages:
   - htop
   - unzip
   - software-properties-common
+
+common_user: ubuntu

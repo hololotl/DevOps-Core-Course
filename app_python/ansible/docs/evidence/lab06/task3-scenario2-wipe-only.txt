@@ -1,0 +1,26 @@
+
+PLAY [Deploy application] ******************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [your-vm-name]
+
+TASK [web_app : Include wipe tasks] ********************************************
+included: /home/niyaz/vsProjects/DevOps-Core-Course/app_python/ansible/roles/web_app/tasks/wipe.yml for your-vm-name
+
+TASK [web_app : Stop and remove containers with Docker Compose] ****************
+changed: [your-vm-name]
+
+TASK [web_app : Remove docker-compose.yml file] ********************************
+changed: [your-vm-name]
+
+TASK [web_app : Remove application directory] **********************************
+changed: [your-vm-name]
+
+TASK [web_app : Log wipe completion] *******************************************
+ok: [your-vm-name] => {
+    "msg": "Application devops-app wiped successfully from /opt/devops-app"
+}
+
+PLAY RECAP *********************************************************************
+your-vm-name               : ok=6    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

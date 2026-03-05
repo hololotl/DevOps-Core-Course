@@ -1,3 +1,7 @@
+# Ansible Infrastructure Automation
+
+[![Ansible Deployment](https://github.com/hololotl/DevOps-Core-Course/actions/workflows/ansible-deploy.yml/badge.svg)](https://github.com/hololotl/DevOps-Core-Course/actions/workflows/ansible-deploy.yml)
+
 ## Task 2 — System Provisioning Roles
 
 ### First Run (Installation)

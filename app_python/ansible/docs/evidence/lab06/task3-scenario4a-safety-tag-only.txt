@@ -1,0 +1,12 @@
+
+PLAY [Deploy application] ******************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [your-vm-name]
+
+TASK [web_app : Include wipe tasks] ********************************************
+skipping: [your-vm-name]
+
+PLAY RECAP *********************************************************************
+your-vm-name               : ok=1    changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+

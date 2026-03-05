@@ -1,0 +1,54 @@
+
+PLAY [Deploy application] ******************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [your-vm-name]
+
+TASK [docker : Add Docker GPG key] *********************************************
+ok: [your-vm-name]
+
+TASK [docker : Add Docker repository] ******************************************
+ok: [your-vm-name]
+
+TASK [docker : Install Docker packages] ****************************************
+ok: [your-vm-name]
+
+TASK [docker : Ensure Docker service is enabled and started] *******************
+ok: [your-vm-name]
+
+TASK [docker : Add user to docker group] ***************************************
+ok: [your-vm-name]
+
+TASK [docker : Install python3-docker via apt] *********************************
+ok: [your-vm-name]
+
+TASK [web_app : Include wipe tasks] ********************************************
+skipping: [your-vm-name]
+
+TASK [web_app : Check if old container exists] *********************************
+ok: [your-vm-name]
+
+TASK [web_app : Stop and remove old container if it exists and is from old deployment] ***
+changed: [your-vm-name]
+
+TASK [web_app : Login to Docker Hub (optional)] ********************************
+ok: [your-vm-name]
+
+TASK [web_app : Create compose project directory] ******************************
+ok: [your-vm-name]
+
+TASK [web_app : Render docker-compose.yml from template] ***********************
+ok: [your-vm-name]
+
+TASK [web_app : Start/update stack with Docker Compose v2] *********************
+changed: [your-vm-name]
+
+TASK [web_app : Wait for application to be ready] ******************************
+ok: [your-vm-name]
+
+TASK [web_app : Verify health endpoint] ****************************************
+ok: [your-vm-name]
+
+PLAY RECAP *********************************************************************
+your-vm-name               : ok=15   changed=2    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+
