@@ -1,0 +1,78 @@
+---
+# Wipe logic runs first (when explicitly requested via variable + tag)
+- name: Include wipe tasks
+  ansible.builtin.include_tasks: wipe.yml
+  when: web_app_wipe | bool
+  tags:
+    - web_app_wipe
+
+- name: Deploy application with Docker Compose
+  block:
+    - name: Check if old container exists
+      community.docker.docker_container_info:
+        name: "{{ app_name }}"
+      register: container_info
+      ignore_errors: true
+
+    - name: Stop and remove old container if it exists and is from old deployment
+      community.docker.docker_container:
+        name: "{{ app_name }}"
+        state: absent
+      when: container_info.exists is defined and container_info.exists
+      ignore_errors: true
+
+    - name: Login to Docker Hub (optional)
+      community.docker.docker_login:
+        username: "{{ dockerhub_username }}"
+        password: "{{ dockerhub_password }}"
+        registry_url: https://index.docker.io/v1/
+      when:
+        - dockerhub_username is defined
+        - dockerhub_password is defined
+
+    - name: Create compose project directory
+      ansible.builtin.file:
+        path: "{{ compose_project_dir }}"
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Render docker-compose.yml from template
+      ansible.builtin.template:
+        src: docker-compose.yml.j2
+        dest: "{{ compose_project_dir }}/docker-compose.yml"
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Start/update stack with Docker Compose v2
+      community.docker.docker_compose_v2:
+        project_src: "{{ compose_project_dir }}"
+        state: present
+        pull: always
+        recreate: auto
+        remove_orphans: true
+
+    - name: Wait for application to be ready
+      ansible.builtin.wait_for:
+        host: "{{ ansible_host | default(inventory_hostname) }}"
+        port: "{{ app_port }}"
+        delay: 5
+        timeout: 60
+
+    - name: Verify health endpoint
+      ansible.builtin.uri:
+        url: "http://{{ ansible_host | default(inventory_hostname) }}:{{ app_port }}/health"
+        method: GET
+        status_code: 200
+        timeout: 10
+
+  rescue:
+    - name: Report Docker Compose deployment failure
+      ansible.builtin.debug:
+        msg: "Docker Compose deployment failed for {{ app_name }}"
+
+  tags:
+    - app_deploy
+    - compose

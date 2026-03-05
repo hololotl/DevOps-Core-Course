@@ -1,0 +1,4 @@
+---
+# Dependency ensures Docker engine + compose plugin are ready before app deployment.
+dependencies:
+  - role: docker

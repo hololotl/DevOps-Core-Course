@@ -2,8 +2,7 @@
 
 ## Link to Ci
 
-https://github.com/hololotl/DevOps-Core-Course/actions/runs/21955176111
-
+https://github.com/hololotl/DevOps-Core-Course/actions/runs/21955325476
 ## Versioning Strategy
 
 We use Calendar Versioning (CalVer).
