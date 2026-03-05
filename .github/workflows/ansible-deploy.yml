@@ -59,7 +59,6 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.VM_HOST }} >> ~/.ssh/known_hosts 2>/dev/null || true
-        if: secrets.SSH_PRIVATE_KEY != ''
 
       - name: Create Vault password file
         run: |
@@ -85,7 +84,6 @@ jobs:
           sleep 10
           curl -f http://${{ secrets.VM_HOST }}:8000/health || exit 1
           echo "Application health check passed!"
-        if: secrets.VM_HOST != ''
 
       - name: Log deployment status
         if: success()
