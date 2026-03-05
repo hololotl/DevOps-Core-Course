@@ -53,12 +53,19 @@ jobs:
       - name: Install Ansible
         run: pip install ansible
 
+      - name: Read target from inventory
+        run: |
+          TARGET_HOST=$(awk '/^\[webservers\]/{getline; for(i=1;i<=NF;i++){if($i ~ /^ansible_host=/){split($i,a,"="); print a[2]}}}' app_python/ansible/inventory/hosts.ini)
+          TARGET_USER=$(awk '/^\[webservers\]/{getline; for(i=1;i<=NF;i++){if($i ~ /^ansible_user=/){split($i,a,"="); print a[2]}}}' app_python/ansible/inventory/hosts.ini)
+          echo "TARGET_HOST=$TARGET_HOST" >> "$GITHUB_ENV"
+          echo "TARGET_USER=$TARGET_USER" >> "$GITHUB_ENV"
+
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.VM_HOST }} >> ~/.ssh/known_hosts 2>/dev/null || true
+          ssh-keyscan -H "$TARGET_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
 
       - name: Create Vault password file
         run: |
@@ -82,11 +89,11 @@ jobs:
       - name: Verify Deployment
         run: |
           sleep 10
-          curl -f http://${{ secrets.VM_HOST }}:5000/health || exit 1
+          ssh -o StrictHostKeyChecking=no "$TARGET_USER@$TARGET_HOST" 'curl -fsS http://localhost:8000/health' || exit 1
           echo "Application health check passed!"
 
       - name: Log deployment status
         if: success()
         run: |
           echo "✅ Deployment completed successfully"
-          echo "Application URL: http://${{ secrets.VM_HOST }}:5000"
+          echo "Application URL: http://$TARGET_HOST:8000"
